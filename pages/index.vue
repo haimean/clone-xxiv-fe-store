@@ -22,12 +22,11 @@
 </template>
 
 <script>
-import Card from '~/components/Card'
+import home from '@/layouts/home.vue'
 
 export default {
-  name: 'IndexPage',
-  components: {
-    Card,
+  layouts: {
+    home,
   },
 }
 </script>
