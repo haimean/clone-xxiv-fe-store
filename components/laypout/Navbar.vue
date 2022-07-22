@@ -1,21 +1,37 @@
 <template>
   <div>
-    <div class="px-[3.75rem]">
+    <div class="px-[3.75rem] text-black">
       <div class="columns">
         <div class="column is-align-items-baseline">
           <b-navbar class="h-[80px]">
             <template #start>
-              <b-navbar-item class="underline-hover">
-                <nuxt-link to="/">Trang chủ </nuxt-link>
+              <b-navbar-item
+                class="underline-hover"
+                tag="router-link"
+                to="/product"
+              >
+                <p>Trang chủ</p>
               </b-navbar-item>
-              <b-navbar-item class="underline-hover">
-                <nuxt-link to="/about">Giới thiệu</nuxt-link>
+              <b-navbar-item
+                class="underline-hover"
+                tag="router-link"
+                to="/about"
+              >
+                <p>Giới thiệu</p>
               </b-navbar-item>
-              <b-navbar-item class="underline-hover">
-                <nuxt-link to="/product">Sản phẩm</nuxt-link>
+              <b-navbar-item
+                class="underline-hover"
+                tag="router-link"
+                to="/product"
+              >
+                <p>Sản phẩm</p>
               </b-navbar-item>
-              <b-navbar-item class="underline-hover">
-                <nuxt-link to="/blog">Blog</nuxt-link>
+              <b-navbar-item
+                class="underline-hover"
+                tag="router-link"
+                to="/blog"
+              >
+                <p>Blog</p>
               </b-navbar-item>
             </template>
           </b-navbar>

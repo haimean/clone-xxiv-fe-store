@@ -22,11 +22,7 @@
 </template>
 
 <script>
-import home from '@/layouts/home.vue'
-
 export default {
-  layouts: {
-    home,
-  },
+  layout: 'home',
 }
 </script>

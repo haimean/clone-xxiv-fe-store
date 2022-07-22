@@ -24,10 +24,10 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ['@/assets/css/main.css', '@/assets/css/style.scss'],
+  css: ['@/assets/css/tailwind.css', '@/assets/css/main.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [{ src: '~plugins/vee-validate.js' }],
+  plugins: [{ src: '~/plugins/api.ts' }, { src: '~plugins/vee-validate.js' }],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
