@@ -8,9 +8,9 @@
             <b-autocomplete
               v-model="nameBand"
               rounded
+              open-on-focus
               field="name"
               :data="filteredDataArray"
-              placeholder="e.g. jQuery"
               icon="magnify"
               clearable
               @select="(option) => (selectedBrand = option)"
@@ -25,7 +25,7 @@
               <b-field>
                 <b-radio v-model="sex" native-value="male"> Nam </b-radio>
                 <b-radio v-model="sex" native-value="female"> Nữ </b-radio>
-                <b-radio v-model="sex" native-value="unisex"> Unisex </b-radio>
+                <b-radio v-model="sex" native-value="oversex"> Unisex </b-radio>
               </b-field>
             </div>
           </div>
@@ -75,19 +75,26 @@
                   class="column is-full"
                   native-value="1"
                 >
-                  1.500.000 - 3.000.000
+                  0 - 1.500.000
                 </b-radio>
                 <b-radio
                   v-model="price"
                   class="column is-full"
                   native-value="2"
                 >
-                  3.000.000 - 5.000.000
+                  1.500.000 - 3.000.000
                 </b-radio>
                 <b-radio
                   v-model="price"
                   class="column is-full"
                   native-value="3"
+                >
+                  3.000.000 - 5.000.000
+                </b-radio>
+                <b-radio
+                  v-model="price"
+                  class="column is-full"
+                  native-value="4"
                 >
                   >5.000.000
                 </b-radio>
@@ -96,29 +103,32 @@
           </div>
         </div>
         <div class="column is-four-fifths">
-          <div
-            class="
-              columns
-              pr-[15px]
-              is-multiline is-flex is-justify-content-center
-            "
-          >
+          <div v-if="listProducts.length > 0">
             <div
-              v-for="item in products"
-              :key="item.id"
-              class="column is-one-fifth"
+              class="
+                columns
+                pr-[15px]
+                is-multiline is-flex is-justify-content-center
+              "
             >
-              <ProductItem :product="item" />
+              <div
+                v-for="item in products"
+                :key="item.id"
+                class="column is-one-fifth"
+              >
+                <ProductItem :product="item" />
+              </div>
             </div>
+            <b-pagination
+              v-model="pageNumber"
+              :total="lengthOfListProducs"
+              :per-page="perPage"
+              order="is-centered"
+              :size="pageSize"
+            >
+            </b-pagination>
           </div>
-          <b-pagination
-            v-model="pageNumber"
-            :total="lengthOfListProducs"
-            :per-page="perPage"
-            order="is-centered"
-            :size="pageSize"
-          >
-          </b-pagination>
+          <div v-else>khong co</div>
         </div>
       </div>
     </div>
@@ -126,18 +136,36 @@
 </template>
 <script>
 export default {
+  props: {
+    sexProps: {
+      type: String,
+      default: '',
+    },
+    seasonProps: {
+      type: String,
+      default: '',
+    },
+    priceProps: {
+      type: Number,
+      default: null,
+    },
+    selectedBrandProps: {
+      type: Object,
+      default: null,
+    },
+  },
   data() {
     return {
-      listProducts: [],
+      dataOfProducts: [],
       listBrands: [],
-      sex: '',
-      season: '',
-      price: '',
+      sex: this.sexProps,
+      selectedBrand: this.selectedBrandProps,
+      season: this.seasonProps,
+      price: this.priceProps,
       nameBand: '',
       perPage: 30,
       pageSize: '30',
       pageNumber: 1,
-      selectedBrand: null,
     }
   },
   computed: {
@@ -158,6 +186,56 @@ export default {
           .includes(this.nameBand.toLowerCase())
       })
     },
+    listProducts() {
+      let data = this.dataOfProducts
+      if (this.selectedBrand) {
+        data = data.filter((value) => {
+          return (this.selectedBrand.id + '')
+            .toLowerCase()
+            .includes((value.brand.id + '').toLowerCase())
+        })
+      }
+      if (this.sex !== '') {
+        data = data.filter((value) => {
+          return (this.sex + '')
+            .toLowerCase()
+            .includes((value.sex + '').toLowerCase())
+        })
+      }
+      if (this.season !== '') {
+        data = data.filter((value) => {
+          return (this.season + '')
+            .toLowerCase()
+            .includes((value.season + '').toLowerCase())
+        })
+      }
+      switch (this.price) {
+        case '1':
+          console.log('he')
+          data = data.filter((value) => {
+            return value.price < 1500000
+          })
+          break
+        case '2':
+          data = data.filter((value) => {
+            return value.price > 1500000 && value.price < 3000000
+          })
+          break
+        case '3':
+          data = data.filter((value) => {
+            return value.price > 3000000 && value.price < 5000000
+          })
+          break
+        case '4':
+          data = data.filter((value) => {
+            return value.price > 5000000
+          })
+          break
+        default:
+          break
+      }
+      return data
+    },
   },
   mounted() {
     this.getProdcucts()
@@ -169,7 +247,7 @@ export default {
         await this.$api.product
           .getAll()
           .then((response) => {
-            this.listProducts = response.data
+            this.dataOfProducts = response.data
           })
           .catch((e) => {
             Object.keys(err.response.data.errors).forEach((key) => {

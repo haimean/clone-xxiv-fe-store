@@ -252,8 +252,12 @@ export default {
           style: 'currency',
           currency: 'VND',
         }).format(this.capacities.pivot.price)
+      } else {
+        return Intl.NumberFormat('vi', {
+          style: 'currency',
+          currency: 'VND',
+        }).format(this.product.price)
       }
-      return ''
     },
   },
 
