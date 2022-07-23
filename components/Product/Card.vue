@@ -46,9 +46,19 @@
           </div>
           <div>
             <div class="columns">
-              <div class="column is-3"><b-input type="number" /></div>
+              <div class="column is-3">
+                <b-numberinput
+                  v-model="quantity"
+                  :controls="false"
+                  type="number"
+                  :min="0"
+                  :max="capacities ? capacities.pivot.quantity : 0"
+                />
+              </div>
               <div class="column is-9">
-                <b-button type="is-dark" expanded>THÊM VÀO GIỎ HÀNG</b-button>
+                <b-button type="is-dark" expanded @click="addToCard"
+                  >THÊM VÀO GIỎ HÀNG</b-button
+                >
               </div>
             </div>
           </div>
@@ -106,11 +116,12 @@
             <div class="columns">
               <div class="column is-one-fifth font-bold">
                 <p>hương cuối</p>
+              </div>
+              <div class="column is-four-fifths">
                 <p v-for="item in product.last_scent" :key="item.id">
                   {{ item.name }}.
                 </p>
               </div>
-              <div class="column is-four-fifths"></div>
             </div>
           </div>
           <div v-if="choose == 2">
@@ -233,7 +244,12 @@ export default {
   data() {
     return {
       choose: 1,
-      capacities: [],
+      capacities: null,
+      notExists: true,
+      quantity: null,
+      listCard: localStorage.getItem('listCard')
+        ? JSON.parse(localStorage.getItem('listCard'))
+        : [],
     }
   },
   computed: {
@@ -247,7 +263,7 @@ export default {
       return this.product.sex
     },
     changePrice() {
-      if (this.capacities.pivot) {
+      if (this.capacities) {
         return Intl.NumberFormat('vi', {
           style: 'currency',
           currency: 'VND',
@@ -262,6 +278,71 @@ export default {
   },
 
   methods: {
+    addToCard() {
+      if (this.capacities) {
+        if (this.quantity) {
+          if (this.quantity > this.capacities.pivot.quantity) {
+            this.$buefy.snackbar.open({
+              duration: 5000,
+              message: 'Bạn nhấp quá số lượng sản phẩm.',
+              type: 'is-danger',
+              position: 'is-bottom-right',
+              queue: false,
+            })
+          } else {
+            try {
+              this.notExists = true
+              this.listCard.forEach((element) => {
+                if (
+                  element.product.id === this.product.id &&
+                  element.capacities.id === this.capacities.id
+                ) {
+                  element.quantity += this.quantity
+                  this.notExists = false
+                }
+              })
+              if (this.notExists) {
+                this.listCard.push({
+                  product: this.product,
+                  capacities: this.capacities,
+                  quantity: this.quantity,
+                })
+              }
+
+              localStorage.setItem('listCard', JSON.stringify(this.listCard))
+              // this.listCard = JSON.parse(localStorage.getItem('listCard'))
+              this.$buefy.toast.open({
+                message: `Thêm vào giỏ hàng thành công`,
+                type: 'is-success',
+                duration: 5000,
+              })
+            } catch (error) {
+              this.$buefy.toast.open({
+                message: `Thêm vào giỏ hàng không thành công`,
+                type: 'is-danger',
+                duration: 5000,
+              })
+            }
+          }
+        } else {
+          this.$buefy.snackbar.open({
+            duration: 5000,
+            message: 'Bạn thiếu số lượng sản phẩm.',
+            type: 'is-danger',
+            position: 'is-bottom-right',
+            queue: false,
+          })
+        }
+      } else {
+        this.$buefy.snackbar.open({
+          duration: 5000,
+          message: 'Bạn thiếu dung tích bình.',
+          type: 'is-danger',
+          position: 'is-bottom-right',
+          queue: false,
+        })
+      }
+    },
     smell() {
       this.choose = 1
     },

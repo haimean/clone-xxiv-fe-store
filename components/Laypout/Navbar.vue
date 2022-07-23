@@ -57,8 +57,13 @@
               <b-navbar-item href="">
                 <b-icon icon="account" />
               </b-navbar-item>
-              <b-navbar-item href="">
-                <b-icon icon="cart-minus" />
+              <b-navbar-item tag="router-link" to="/card">
+                <div class="relative">
+                  <b-icon icon="cart-minus" />
+                  <span class="count-cart">
+                    {{ listCard ? listCard.length : '' }}
+                  </span>
+                </div>
               </b-navbar-item>
             </template>
           </b-navbar>
@@ -73,5 +78,46 @@
     </div>
   </div>
 </template>
-<style lang="scss">
+<script>
+export default {
+  data() {
+    return {
+      get listCard() {
+        return localStorage.getItem('listCard')
+          ? JSON.parse(localStorage.getItem('listCard'))
+          : ''
+      },
+    }
+  },
+  watch: {
+    listCard(newlistCard) {
+      localStorage.setItem('listCard', JSON.stringify(newlistCard))
+      this.listCard = JSON.parse(localStorage.getItem('listCard'))
+    },
+  },
+  methods: {},
+  // computed: {
+  //   listCard() {
+  //     return localStorage.getItem('listCard')
+  //       ? JSON.parse(localStorage.getItem('listCard'))
+  //       : ''
+  //   },
+  // },
+}
+</script>
+<style lang="scss" scoped>
+.count-cart {
+  position: absolute;
+  font-size: 12px;
+  background: white;
+  width: 15px;
+  border-radius: 50%;
+  height: 15px;
+  text-align: center;
+  color: #000;
+  right: -1px;
+  top: -5px;
+  border: 1px solid #000;
+  line-height: 13px;
+}
 </style>

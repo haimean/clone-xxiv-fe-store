@@ -121,7 +121,7 @@
             </div>
             <b-pagination
               v-model="pageNumber"
-              :total="lengthOfListProducs"
+              :total="lengthOfListProducts"
               :per-page="perPage"
               order="is-centered"
               :size="pageSize"
@@ -151,9 +151,9 @@ export default {
       type: Number,
       default: null,
     },
-    selectedBrandProps: {
-      type: Object,
-      default: null,
+    brandId: {
+      type: String,
+      default: '',
     },
   },
   data() {
@@ -161,7 +161,7 @@ export default {
       dataOfProducts: [],
       listBrands: [],
       sex: this.sexProps,
-      selectedBrand: this.selectedBrandProps,
+      selectedBrand: null,
       season: this.seasonProps,
       price: this.priceProps,
       nameBand: '',
@@ -171,7 +171,7 @@ export default {
     }
   },
   computed: {
-    lengthOfListProducs() {
+    lengthOfListProducts() {
       return this.listProducts.length
     },
     products() {
@@ -194,7 +194,7 @@ export default {
         data = data.filter((value) => {
           return (this.selectedBrand.id + '')
             .toLowerCase()
-            .includes((value.brand.id + '').toLowerCase())
+            .includes((value.brands_id + '').toLowerCase())
         })
       }
       if (this.sex !== '') {
@@ -213,7 +213,6 @@ export default {
       }
       switch (this.price) {
         case '1':
-          console.log('he')
           data = data.filter((value) => {
             return value.price < 1500000
           })
@@ -240,11 +239,12 @@ export default {
     },
   },
   mounted() {
-    this.getProdcucts()
+    this.getProducts()
     this.getBrands()
   },
+
   methods: {
-    async getProdcucts() {
+    async getProducts() {
       try {
         await this.$api.product
           .getAll()
@@ -271,6 +271,7 @@ export default {
           .getBrands()
           .then((response) => {
             this.listBrands = response.data
+            this.getBrand()
           })
           .catch((e) => {
             Object.keys(err.response.data.errors).forEach((key) => {
@@ -284,6 +285,21 @@ export default {
           })
       } catch (e) {
         return Promise.reject(e)
+      }
+    },
+    getBrand() {
+      if (this.brandId !== '') {
+        // this.selectedBrand =
+        this.listBrands.forEach((element) => {
+          if (
+            (this.brandId + '')
+              .toLowerCase()
+              .includes((element.id + '').toLowerCase())
+          ) {
+            this.selectedBrand = element
+            this.nameBand = element.name
+          }
+        })
       }
     },
   },

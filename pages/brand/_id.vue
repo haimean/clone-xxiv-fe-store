@@ -1,3 +1,3 @@
 <template>
-  <div>dfewr</div>
+  <div><BrandProduct /></div>
 </template>

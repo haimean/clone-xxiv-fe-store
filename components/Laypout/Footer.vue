@@ -8,7 +8,6 @@
               <p class="is-size-3">XXIV store</p>
               <br />
               <nuxt-link to="">ưu đãi thành viên</nuxt-link> <br />
-              <nuxt-link to="">tài khoản</nuxt-link> <br />
               <nuxt-link to="">đăng ký đại lý</nuxt-link> <br />
               <nuxt-link to="">tuyển dụng</nuxt-link> <br />
             </div>
@@ -56,3 +55,8 @@
     <div class="py-[10px]">© xxiv 2021 | all right reserved</div>
   </div>
 </template>
+<style lang="scss" scoped>
+a {
+  color: white;
+}
+</style>
