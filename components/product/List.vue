@@ -128,7 +128,9 @@
             >
             </b-pagination>
           </div>
-          <div v-else>khong co</div>
+          <div v-else>
+            <p class="is-size-3 text-center py-[70px]">Không có kết quả</p>
+          </div>
         </div>
       </div>
     </div>

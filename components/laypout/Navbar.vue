@@ -5,11 +5,7 @@
         <div class="column is-align-items-baseline">
           <b-navbar class="h-[80px]">
             <template #start>
-              <b-navbar-item
-                class="underline-hover"
-                tag="router-link"
-                to="/product"
-              >
+              <b-navbar-item class="underline-hover" tag="router-link" to="/">
                 <p>Trang chủ</p>
               </b-navbar-item>
               <b-navbar-item
@@ -18,6 +14,13 @@
                 to="/about"
               >
                 <p>Giới thiệu</p>
+              </b-navbar-item>
+              <b-navbar-item
+                class="underline-hover"
+                tag="router-link"
+                to="/brand"
+              >
+                <p>Thương hiệu</p>
               </b-navbar-item>
               <b-navbar-item
                 class="underline-hover"
